@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internship Management System | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html" aria-label="Internship Management System">
+      <span>IMS</span>
+      <strong>Internship MS</strong>
+    </a>
+
+    <nav class="menu" id="menu" aria-label="Dashboard menu"></nav>
+
+    <div class="sidebar-footer">
+      <button class="theme-btn" id="themeButton" type="button">Theme</button>
+      <button class="logout" id="logoutButton" type="button">Logout</button>
+    </div>
+  </aside>
+
+  <main class="dashboard">
+    <header class="header">
+      <div>
+        <p class="eyebrow">Internship Management System</p>
+        <h1 id="pageTitle">Overview</h1>
+        <p class="user-line">
+          <span id="userName">Loading...</span>
+          <span class="role-badge" id="userRole">role</span>
+        </p>
+      </div>
+      <div class="header-actions">
+        <button class="secondary-btn" id="refreshButton" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <section class="notice" id="notice" hidden></section>
+
+    <section class="overview" id="overviewSection">
+      <div class="stats" id="statsGrid"></div>
+      <div class="overview-grid">
+        <article class="panel">
+          <div class="panel-title">
+            <div>
+              <p class="eyebrow">Recent</p>
+              <h2>ການຝຶກງານລ່າສຸດ</h2>
+            </div>
+          </div>
+          <div id="recentInternships" class="mini-list"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title">
+            <div>
+              <p class="eyebrow">Evaluations</p>
+              <h2>ການປະເມີນລ່າສຸດ</h2>
+            </div>
+          </div>
+          <div id="recentEvaluations" class="mini-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="resource-section" id="resourceSection" hidden>
+      <div class="toolbar">
+        <label class="search-box">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="ຄົ້ນຫາ..." />
+        </label>
+        <button class="primary-btn" id="newButton" type="button">New record</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="modal" id="recordModal">
+    <form method="dialog" class="modal-card" id="recordForm">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" id="modalKicker">Record</p>
+          <h2 id="modalTitle">Add record</h2>
+        </div>
+        <button class="icon-btn" id="closeModal" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid" id="formFields"></div>
+      <p class="form-error" id="formError"></p>
+      <div class="modal-actions">
+        <button class="secondary-btn" id="cancelModal" type="button">Cancel</button>
+        <button class="primary-btn" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

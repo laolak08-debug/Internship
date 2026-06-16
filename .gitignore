@@ -1,0 +1,4 @@
+data/
+screenshots/
+*.log
+node_modules/

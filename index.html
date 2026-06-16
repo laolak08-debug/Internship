@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internship Management System | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="login-shell">
+    <section class="brand-panel" aria-label="Internship system overview">
+      <nav class="topbar">
+        <a class="brand" href="/" aria-label="Internship Management System">
+          <span class="brand-mark">IMS</span>
+          <span>
+            <strong>Internship MS</strong>
+            <small>ລະບົບຈັດການການຝຶກງານ</small>
+          </span>
+        </a>
+
+        <button class="theme-toggle" type="button" aria-label="Change theme">
+          <span class="theme-dot" aria-hidden="true"></span>
+          <span class="theme-label">Dark</span>
+        </button>
+      </nav>
+
+      <div class="hero-copy">
+        <p class="pill">Full-stack demo</p>
+        <h1>ຈັດການຂໍ້ມູນການຝຶກງານນັກສຶກສາໃນບ່ອນດຽວ</h1>
+        <p>
+          Internship Management System ຊ່ວຍຈັດການນັກສຶກສາ, ອາຈານທີ່ປຶກສາ,
+          ບໍລິສັດ, ຜູ້ຄວບຄຸມ, ການຝຶກງານ, ແລະ evaluations ຕາມໂຄງສ້າງ SQL.
+        </p>
+      </div>
+
+      <section class="preview-card" aria-label="System highlights">
+        <div class="preview-top">
+          <span></span>
+          <strong>Live dashboard</strong>
+        </div>
+        <div class="metric-grid">
+          <article>
+            <span>Students</span>
+            <strong>3</strong>
+            <small>ຂໍ້ມູນ seed ພ້ອມໃຊ້</small>
+          </article>
+          <article>
+            <span>Roles</span>
+            <strong>3</strong>
+            <small>Admin, Advisor, Student</small>
+          </article>
+          <article>
+            <span>Storage</span>
+            <strong>SQLite</strong>
+            <small>Database ຈິງໃນເຄື່ອງ</small>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <section class="auth-panel" aria-label="Login form">
+      <div class="auth-card">
+        <div class="auth-heading">
+          <p class="section-label">Welcome back</p>
+          <h2>ເຂົ້າສູ່ລະບົບ IMS</h2>
+          <p>ໃຊ້ບັນຊີ admin ເພື່ອຈັດການຂໍ້ມູນ. ຂໍ້ມູນໃນລະບົບດຶງມາຈາກໄຟລ໌ SQL ເທົ່ານັ້ນ.</p>
+        </div>
+
+        <div class="demo-grid" aria-label="Demo accounts">
+          <button class="demo-account" type="button" data-email="admin@ims.local" data-password="Admin123!">
+            <span>Admin</span>
+            <strong>admin@ims.local</strong>
+            <small>Full access · Password: Admin123!</small>
+          </button>
+        </div>
+
+        <form class="login-form" id="loginForm" novalidate>
+          <div class="field">
+            <label for="email">Email</label>
+            <div class="input-wrap">
+              <span aria-hidden="true">@</span>
+              <input id="email" name="email" type="email" placeholder="admin@ims.local" autocomplete="email" />
+            </div>
+            <p class="field-message" id="emailMessage"></p>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <span aria-hidden="true">*</span>
+              <input id="password" name="password" type="password" placeholder="ຢ່າງນ້ອຍ 8 ຕົວອັກສອນ" autocomplete="current-password" />
+              <button class="ghost-btn" type="button" id="togglePassword" aria-label="Show password">Show</button>
+            </div>
+            <p class="field-message" id="passwordMessage"></p>
+          </div>
+
+          <label class="check-row">
+            <input id="remember" name="remember" type="checkbox" />
+            <span>Remember this email</span>
+          </label>
+
+          <button class="submit-btn" type="submit">
+            <span>Login to dashboard</span>
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

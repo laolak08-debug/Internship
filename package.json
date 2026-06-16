@@ -1,0 +1,17 @@
+{
+  "name": "internship-management-system",
+  "version": "1.0.0",
+  "description": "Node.js and SQLite Internship Management System using SQL Server source data.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "import:sql": "node import-sqlserver-data.js",
+    "check": "node --check server.js && node --check script.js && node --check dashboard.js && node --check import-sqlserver-data.js"
+  },
+  "keywords": [
+    "internship",
+    "sqlite",
+    "student-management"
+  ],
+  "license": "MIT"
+}
