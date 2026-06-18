@@ -4,76 +4,87 @@ const crypto = require("node:crypto");
 const { DatabaseSync } = require("node:sqlite");
 
 const DEFAULT_SOURCE = path.join(__dirname, "sql", "InternshipManagement_Complete.sql");
-const SOURCE = process.argv[2] || DEFAULT_SOURCE;
-const DB_PATH = path.join(__dirname, "data", "internship.db");
+const DEFAULT_DB_PATH = path.join(__dirname, "data", "internship.db");
+let db;
+let counts;
 
-if (!fs.existsSync(SOURCE)) {
-  console.error(`SQL source not found: ${SOURCE}`);
-  process.exit(1);
+if (require.main === module) {
+  const source = process.argv[2] || DEFAULT_SOURCE;
+
+  if (!fs.existsSync(DEFAULT_DB_PATH)) {
+    console.error(`SQLite database not found: ${DEFAULT_DB_PATH}. Start the app once with "node server.js" first.`);
+    process.exit(1);
+  }
+
+  const database = new DatabaseSync(DEFAULT_DB_PATH);
+  database.exec("PRAGMA foreign_keys = ON");
+
+  console.log(JSON.stringify(importSqlServerData(database, source), null, 2));
+} else {
+  module.exports = { DEFAULT_SOURCE, importSqlServerData };
 }
 
-if (!fs.existsSync(DB_PATH)) {
-  console.error(`SQLite database not found: ${DB_PATH}. Start the app once with "node server.js" first.`);
-  process.exit(1);
-}
+function importSqlServerData(database, source = DEFAULT_SOURCE) {
+  if (!fs.existsSync(source)) {
+    throw new Error(`SQL source not found: ${source}`);
+  }
 
-const sql = fs.readFileSync(SOURCE, "utf8");
-const db = new DatabaseSync(DB_PATH);
-db.exec("PRAGMA foreign_keys = ON");
+  db = database;
+  const sql = fs.readFileSync(source, "utf8");
+  const parsed = {
+    departments: parseDepartments(sql),
+    students: parseStudents(sql),
+    companies: parseCompanies(sql),
+    supervisors: parseSupervisors(sql),
+    internships: parseInternships(sql),
+    evaluations: parseEvaluations(sql),
+  };
 
-const parsed = {
-  departments: parseDepartments(sql),
-  students: parseStudents(sql),
-  companies: parseCompanies(sql),
-  supervisors: parseSupervisors(sql),
-  internships: parseInternships(sql),
-  evaluations: parseEvaluations(sql),
-};
-
-const counts = {
-  departments: parsed.departments.length,
-  students: 0,
-  companies: 0,
-  supervisors: 0,
-  internships: 0,
-  evaluations: 0,
-  adminUsers: 0,
-};
-
-ensureSqlTables();
-ensureColumn("students", "gender", "TEXT DEFAULT ''");
-ensureColumn("students", "department_id", "INTEGER");
-ensureColumn("internships", "supervisor_id", "INTEGER");
-
-db.exec("BEGIN");
-try {
-  resetSqlOnlyData();
-  ensureAdminUser();
-  importDepartments(parsed.departments);
-  importCompanies(parsed.companies, parsed.supervisors);
-  importSupervisors(parsed.supervisors);
-  importStudents(parsed.students);
-  importInternships(parsed.internships, parsed.supervisors);
-  importEvaluations(parsed.evaluations);
-  db.exec("COMMIT");
-} catch (error) {
-  db.exec("ROLLBACK");
-  throw error;
-}
-
-console.log(JSON.stringify({
-  source: SOURCE,
-  parsed: {
+  counts = {
     departments: parsed.departments.length,
-    students: parsed.students.length,
-    companies: parsed.companies.length,
-    supervisors: parsed.supervisors.length,
-    internships: parsed.internships.length,
-    evaluations: parsed.evaluations.length,
-  },
-  imported: counts,
-  adminLogin: "admin@ims.local / Admin123!",
-}, null, 2));
+    students: 0,
+    companies: 0,
+    supervisors: 0,
+    internships: 0,
+    evaluations: 0,
+    adminUsers: 0,
+  };
+
+  ensureSqlTables();
+  ensureColumn("students", "gender", "TEXT DEFAULT ''");
+  ensureColumn("students", "department_id", "INTEGER");
+  ensureColumn("internships", "supervisor_id", "INTEGER");
+
+  db.exec("BEGIN");
+  try {
+    resetSqlOnlyData();
+    ensureAdminUser();
+    importDepartments(parsed.departments);
+    importCompanies(parsed.companies, parsed.supervisors);
+    importSupervisors(parsed.supervisors);
+    importStudents(parsed.students);
+    importInternships(parsed.internships, parsed.supervisors);
+    importEvaluations(parsed.evaluations);
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+
+  return {
+    source,
+    parsed: {
+      departments: parsed.departments.length,
+      students: parsed.students.length,
+      companies: parsed.companies.length,
+      supervisors: parsed.supervisors.length,
+      internships: parsed.internships.length,
+      evaluations: parsed.evaluations.length,
+    },
+    imported: counts,
+    adminLogin: "admin@ims.local / Admin123!",
+  };
+}
 
 function resetSqlOnlyData() {
   db.exec(`

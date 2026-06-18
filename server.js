@@ -3,6 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { DatabaseSync } = require("node:sqlite");
+const { DEFAULT_SOURCE, importSqlServerData } = require("./import-sqlserver-data");
 
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
@@ -180,6 +181,8 @@ function initializeDatabase() {
   if (userCount === 0) {
     seedDatabase();
   }
+
+  autoImportSqlData();
 }
 
 function ensureColumn(table, column, definition) {
@@ -197,6 +200,26 @@ function seedDatabase() {
   `);
 
   addUser.run("System Admin", "admin@ims.local", hashPassword("Admin123!"), "admin", null, null);
+}
+
+function autoImportSqlData() {
+  if (process.env.IMS_AUTO_IMPORT_SQL === "false") return;
+
+  const sqlTables = ["departments", "students", "companies", "supervisors", "internships", "evaluations"];
+  const hasSqlData = sqlTables.some((table) => (
+    db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get().total > 0
+  ));
+
+  if (hasSqlData) return;
+
+  try {
+    const result = importSqlServerData(db, DEFAULT_SOURCE);
+    console.log(
+      `Imported SQL source data: departments=${result.imported.departments}, students=${result.imported.students}, companies=${result.imported.companies}, supervisors=${result.imported.supervisors}, internships=${result.imported.internships}, evaluations=${result.imported.evaluations}`
+    );
+  } catch (error) {
+    console.error("SQL source auto-import failed:", error);
+  }
 }
 
 async function handleApi(req, res, url) {
