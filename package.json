@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Node.js and SQLite Internship Management System using SQL Server source data.",
   "main": "server.js",
+  "engines": {
+    "node": ">=24.0.0 <25.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "import:sql": "node import-sqlserver-data.js",
